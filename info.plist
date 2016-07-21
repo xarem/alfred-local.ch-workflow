@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.alfredapp.uelibanholzer.local</string>
+	<key>category</key>
+	<string>Internet</string>
+	<key>connections</key>
+	<dict>
+		<key>63F60794-BB56-4415-9372-BAF974C3A7E1</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>3315F46E-A7DA-4706-AAC6-D171C9934584</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Ueli Banholzer</string>
+	<key>description</key>
+	<string>Sucht im local.ch Telefonbuch</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>local.ch</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>plusspaces</key>
+				<false/>
+				<key>url</key>
+				<string>{query}</string>
+				<key>utf8</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>3315F46E-A7DA-4706-AAC6-D171C9934584</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>36</integer>
+				<key>keyword</key>
+				<string>tel</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>1</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
+				<key>runningsubtext</key>
+				<string>Lade Ergebnisse ...</string>
+				<key>script</key>
+				<string>require_once('workflows.php');
+
+$wf = new Workflows();
+
+$orig = "{query}";
+
+$requestUrl = 'https://extapi.local.ch/de/0/tel/lookupint?key=158D483067AC11DE8A390800200C9A66&amp;q=' . urlencode($orig);
+
+$xml = file_get_contents($requestUrl); 
+$xml = preg_replace("/(&lt;\/?)(\w+):([^&gt;]*&gt;)/", "$1$2$3", $xml);  
+$xml = simplexml_load_string($xml);  
+
+$i = 0;
+if (isset($xml-&gt;entry)) {
+    foreach($xml-&gt;entry as $result) {
+        preg_match('/^\+(\d{2})(\d{2})(\d{3})(\d{2})(\d{2})$/', $result-&gt;telphone, $telResult);
+
+        $wf-&gt;result( 
+            $i . '.' . time(),
+            'https://tel.local.ch/de/d/' . $result-&gt;telid,
+			$result-&gt;title,
+            sprintf('+%s %s %s %s %s', $telResult[1], $telResult[2], $telResult[3], $telResult[4], $telResult[5]),
+            'icon.png'
+        );
+    }
+}
+
+if ($i === 0) {
+    $wf-&gt;result('localch', 'https://tel.local.ch/de/q/?what=' . urlencode($orig), 'Local.ch', 'Keine Resultate gefunden', 'icon.png');
+}
+
+echo $wf-&gt;toxml();
+</string>
+				<key>subtext</key>
+				<string>Suche nach Einträgen in local.ch</string>
+				<key>title</key>
+				<string>Suche local.ch</string>
+				<key>type</key>
+				<integer>1</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>63F60794-BB56-4415-9372-BAF974C3A7E1</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string></string>
+	<key>uidata</key>
+	<dict>
+		<key>3315F46E-A7DA-4706-AAC6-D171C9934584</key>
+		<dict>
+			<key>ypos</key>
+			<real>60</real>
+		</dict>
+		<key>63F60794-BB56-4415-9372-BAF974C3A7E1</key>
+		<dict>
+			<key>ypos</key>
+			<real>60</real>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string>banholzer.me</string>
+</dict>
+</plist>
