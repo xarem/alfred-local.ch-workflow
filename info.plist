@@ -88,7 +88,7 @@ if (isset($xml-&gt;entry)) {
         $wf-&gt;result( 
             $i . '.' . time(),
             'https://tel.local.ch/de/d/' . $result-&gt;telid,
-			$result-&gt;title,
+            $result-&gt;title,
             sprintf('+%s %s %s %s %s', $telResult[1], $telResult[2], $telResult[3], $telResult[4], $telResult[5]),
             'icon.png'
         );
