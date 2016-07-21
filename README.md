@@ -2,8 +2,9 @@
 
 ## Usage
 
-1. import workflow
-2. type `tel [your query]` (f.ex. `tel whatwedo gmbh`)
+1. download the workflow from the [releases page](https://github.com/xarem/alfred-local.ch-workflow/releases)
+2. import workflow
+3. type `tel [your query]` (f.ex. `tel whatwedo gmbh`)
 
 ## Credits
 
