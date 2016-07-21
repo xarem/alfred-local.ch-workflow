@@ -82,6 +82,7 @@ $xml = simplexml_load_string($xml);
 $i = 0;
 if (isset($xml-&gt;entry)) {
     foreach($xml-&gt;entry as $result) {
+		$i++;
         preg_match('/^\+(\d{2})(\d{2})(\d{3})(\d{2})(\d{2})$/', $result-&gt;telphone, $telResult);
 
         $wf-&gt;result( 
