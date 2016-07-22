@@ -73,22 +73,24 @@ $wf = new Workflows();
 
 $orig = "{query}";
 
-$requestUrl = 'https://extapi.local.ch/de/0/tel/lookupint?key=158D483067AC11DE8A390800200C9A66&amp;q=' . urlencode($orig);
+$requestUrl = 'https://4ioen53mlg.execute-api.eu-central-1.amazonaws.com/prod?q=' . urlencode($orig);
 
-$xml = file_get_contents($requestUrl); 
+$xml = file_get_contents($requestUrl, true);
+$xml = json_decode($xml);
+$xml = $xml-&gt;response;
 $xml = preg_replace("/(&lt;\/?)(\w+):([^&gt;]*&gt;)/", "$1$2$3", $xml);  
 $xml = simplexml_load_string($xml);  
 
 $i = 0;
 if (isset($xml-&gt;entry)) {
     foreach($xml-&gt;entry as $result) {
-        $i++;
+		$i++;
         preg_match('/^\+(\d{2})(\d{2})(\d{3})(\d{2})(\d{2})$/', $result-&gt;telphone, $telResult);
 
         $wf-&gt;result( 
             $i . '.' . time(),
             'https://tel.local.ch/de/d/' . $result-&gt;telid,
-            $result-&gt;title,
+			$result-&gt;title,
             sprintf('+%s %s %s %s %s', $telResult[1], $telResult[2], $telResult[3], $telResult[4], $telResult[5]),
             'icon.png'
         );
